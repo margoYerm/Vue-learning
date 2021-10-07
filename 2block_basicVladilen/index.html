@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Основы Vue</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    /* v-cloak позволяет показать блок тогда, когда он будет построен и все данные подставлены */
+    [v-cloak] {
+      display: none;
+    }
+    hr {width: 100%;}
+  </style>
+</head>
+<body>
+  <div class="container pt-5" id="app" v-cloak>
+    <div class="card center">
+      <div v-html="myHtml"></div>
+      <!-- <h1>{{ title }}</h1>  -->
+      <h2 v-text="title"></h2>  <!-- v-text заменяет интерполяцию (выше) и выводит строку из даты-->
+      <!-- v-once выводит значение при построении дома и впредь не меняет значение даже если изменится модель -->
+      <h2 v-once> {{title}} </h2> 
+      <!-- like <pre></pre> in html -->
+      <h2 v-pre> {{title}} </h2> 
+      <!-- Changing just v-text, not changed v-once and .js -->
+      <button class="btn" @click="title = 'I am renamed'">Change title</button>
+      <hr/>
+      <!-- <ul class="list" v-for="(item, idx) in 7">
+        <li class="list-item"> <strong>{{idx+1}}. </strong>  {{item}} </li>
+      </ul> -->
+      
+      <ul class="list" >
+        <li class="list-item" style="justify-content: center;" v-for="(value, key) in person">
+          <strong> {{key}} </strong>:  {{ value }}
+        </li>
+      </ul>
+      <hr/>
+
+      <ul class="list" v-if="items.length" >
+        <li 
+        class="list-item"
+        v-for="(item, idx) in items"
+        @click="items.splice(idx, 1)" > 
+        <strong>{{item}}</strong></li>
+      </ul>
+      <!-- h3 not exist in DomThree -->
+      <!-- <h3 v-else>Items contains no elements</h3>  --> 
+
+      <!-- h3 exist in Dom and can to use in anemations or something else-->
+      <h3 v-show="items.length === 0">Items contains no elements</h3>
+    
+      <hr>
+      <h2>Lists rendering</h2> 
+      <ul class="list">
+        <li 
+         class="list-item"
+         v-for="(item, i) in evenItems"
+         @click="itemsRendering.splice(i, 1)"
+         :key="item"
+        > <strong> {{item}} </strong> &nbsp;         
+          <!-- Click on item removing el, but not click on intut @click='stopPropagation -->
+          <!-- We can use @click.prevent.stop etc -->
+          <!-- :key="item" фиксит баг (оптимизация Дома) при удалении item с заполненным инпутом -->
+          <input type="text" @click.stop>
+      </li>
+      </ul>
+      <!-- <h3 v-show="itemsRendering.length === 0">itemsRendering contains no elements</h3> -->
+      <h3 v-show="evenItems.length === 0">evenItemsRendering contains no elements</h3>
+      
+      <hr>
+      <div class="form-control">
+        <input type="text" @keyup.enter="addItem($event)" ref="myInput">
+      </div>
+      <p>Please, click right mouse button to delete some item</p>
+      <ul class="list">
+        <li 
+         class="list-item"
+         v-for="(item, i) in mass"
+         @click.right.prevent="remove(i), log(item)"
+         :key="item"
+        > <strong> {{item}} </strong> &nbsp;                   
+          <input type="text" @click.stop>
+      </li>
+      </ul>
+    </div>
+  </div>  
+
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+<!-- 1:53 -->
